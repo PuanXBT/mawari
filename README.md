@@ -1,8 +1,4 @@
 # Mawari Guardian Node (Testnet) — Step by Step Setup
-
-Panduan ini membantu menjalankan **Guardian Node** Mawari Testnet di **Ubuntu 24.04**.
-Semua command dipisah baris demi baris supaya mudah untuk pemula.
-
 ---
 
 ## Persyaratan Sistem
@@ -16,8 +12,8 @@ Semua command dipisah baris demi baris supaya mudah untuk pemula.
 
 ## 0 — Siapkan Wallet & NFT
 
-1. Claim faucet token (maks 2) di [Mawari Hub](https://hub.testnet.mawari.net/)
-2. Kunjungi [Mawari Mint](https://testnet.mawari.net/mint) → connect wallet (max 3)
+1. Claim faucet [Mawari Hub](https://hub.testnet.mawari.net/)
+2. Mint NFT Testnet [Mawari Mint](https://testnet.mawari.net/mint) → connect wallet & mint (max 3)
 
 ---
 
