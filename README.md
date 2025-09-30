@@ -16,15 +16,14 @@ Semua command dipisah baris demi baris supaya mudah untuk pemula.
 
 ## 0 — Siapkan Wallet & NFT
 
-1. Kunjungi [Mawari Mint](https://testnet.mawari.net/mint) → connect wallet.
-2. Claim faucet token (maks 2) di [Mawari Hub](https://hub.testnet.mawari.net/).
-3. Mint sampai 3 Guardian NFT di **MAIN wallet**.
+1. Claim faucet token (maks 2) di [Mawari Hub](https://hub.testnet.mawari.net/)
+2. Kunjungi [Mawari Mint](https://testnet.mawari.net/mint) → connect wallet (max 3)
 
 ---
 
 ## 1 — Install Docker
 
-Jalankan perintah berikut satu per satu:
+Jalankan perintah berikut :
 
 ```bash
 sudo apt update -y
@@ -71,7 +70,7 @@ docker --version
 
 ## 2 — Jalankan Node (container: `mawari`)
 
-Set variabel (ganti alamat dengan wallet utama yang pegang NFT):
+Set variabel (ganti alamat dengan wallet utama yang dipake mint NFT):
 
 ```bash
 export MNTESTNET_IMAGE=us-east4-docker.pkg.dev/mawarinetwork-dev/mwr-net-d-car-uses4-public-docker-registry-e62e/mawari-node:latest
@@ -133,19 +132,19 @@ Tampilkan private key:
 grep -i "privateKey" ~/mawari/flohive-cache.json
 ```
 
-**Penting:** simpan private key dengan aman (jangan dishare, jangan upload ke repo publik).
+**Penting:** simpan private key dengan aman (AMANKAN PK).
 
 ---
 
-## 6 — Perintah Harian
+## 6 — Command Lainya
 
-Cek container jalan:
+Cek container jalan/Kaga:
 
 ```bash
 docker ps
 ```
 
-Lihat log:
+Pantau logs:
 
 ```bash
 docker logs -f mawari
@@ -161,7 +160,7 @@ docker restart mawari
 
 ---
 
-## 7 — Update Node
+## 7 — Update Node (Jika Nanti Ada Update :
 
 Tarik image terbaru:
 
@@ -200,7 +199,7 @@ docker run -d --name mawari --pull always --restart unless-stopped \
 
 * **Delegasi gagal**
 
-  * Pastikan delegasi dari MAIN → burner
-  * Burner harus pegang 1 token test
+  * Pastikan delegasi dari MAIN wallet ke → burner Wallet Address 
+  * Pastikan Burn Wallet Ada Faucetnya
 
 ---
