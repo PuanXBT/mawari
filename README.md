@@ -1,131 +1,206 @@
-# Mawari Node (Testnet) — Quick Setup
+# Mawari Guardian Node (Testnet) — Step by Step Setup
 
-Simple walkthrough for running a **Guardian Node** on Mawari Testnet using **Ubuntu 24.04**.
-
----
-
-## Requirements
-
-* 4 CPU cores
-* 8 GB RAM
-* 50 GB SSD
+Panduan ini membantu menjalankan **Guardian Node** Mawari Testnet di **Ubuntu 24.04**.
+Semua command dipisah baris demi baris supaya mudah untuk pemula.
 
 ---
 
-## Step 0 — Wallet & Assets
+## Persyaratan Sistem
 
-1. Go to [Mawari Mint](https://testnet.mawari.net/mint) → connect wallet.
-2. Claim test tokens at [Mawari Hub](https://hub.testnet.mawari.net/).
-3. Mint up to 3 Guardian NFTs.
-
-   > These NFTs will later be delegated to your node’s burner wallet.
+* **CPU**: 4 vCPU
+* **RAM**: 8 GB
+* **Disk**: 50 GB SSD
+* **OS**: Ubuntu 24.04
 
 ---
 
-## Step 1 — Install Docker
+## 0 — Siapkan Wallet & NFT
+
+1. Kunjungi [Mawari Mint](https://testnet.mawari.net/mint) → connect wallet.
+2. Claim faucet token (maks 2) di [Mawari Hub](https://hub.testnet.mawari.net/).
+3. Mint sampai 3 Guardian NFT di **MAIN wallet**.
+
+---
+
+## 1 — Install Docker
+
+Jalankan perintah berikut satu per satu:
 
 ```bash
-sudo apt update && sudo apt install -y ca-certificates curl gnupg
+sudo apt update -y
+```
+
+```bash
+sudo apt install -y ca-certificates curl gnupg
+```
+
+```bash
 sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
- | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+```bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+```bash
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
+
+```bash
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
- https://download.docker.com/linux/ubuntu noble stable" \
- | sudo tee /etc/apt/sources.list.d/docker.list
-sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+https://download.docker.com/linux/ubuntu noble stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+```bash
+sudo apt update -y
+```
+
+```bash
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Cek versi:
+
+```bash
 docker --version
 ```
 
 ---
 
-## Step 2 — Run the Node
+## 2 — Jalankan Node (container: `mawari`)
 
-Set environment vars (replace with your **main wallet**):
+Set variabel (ganti alamat dengan wallet utama yang pegang NFT):
 
 ```bash
 export MNTESTNET_IMAGE=us-east4-docker.pkg.dev/mawarinetwork-dev/mwr-net-d-car-uses4-public-docker-registry-e62e/mawari-node:latest
-export OWNER_ADDRESS=0xYOUR_MAIN_WALLET
 ```
 
-Start container:
+```bash
+export OWNER_ADDRESS=0xISIWALLETMU(yg mint NFT)
+```
+
+Buat folder cache:
 
 ```bash
 mkdir -p ~/mawari
-docker run -d --name mawari --pull always --restart unless-stopped \
- -v ~/mawari:/app/cache -e OWNERS_ALLOWLIST=$OWNER_ADDRESS $MNTESTNET_IMAGE
 ```
 
-Logs:
+Jalankan container:
+
+```bash
+docker run -d --name mawari --pull always --restart unless-stopped \
+-v ~/mawari:/app/cache -e OWNERS_ALLOWLIST=$OWNER_ADDRESS $MNTESTNET_IMAGE
+```
+
+Cek log realtime:
 
 ```bash
 docker logs -f mawari
 ```
 
-Get burner wallet address:
+Ambil alamat burner wallet:
 
 ```bash
-docker logs mawari | grep "Using burner wallet"
+docker logs mawari | grep -i "Using burner wallet"
 ```
 
 ---
 
-## Step 3 — Fund Burner Wallet
+## 3 — Fund Burner Wallet
 
-* Send **1 MAWARI test token** from your main wallet.
-* Or faucet directly for the burner address if needed.
-
----
-
-## Step 4 — Delegate Guardian NFTs
-
-1. Open [Guardian Dashboard](https://app.testnet.mawari.net/licenses).
-2. Connect with main wallet.
-3. Choose NFT(s) → **Delegate** → enter burner address → confirm.
+* Kirim **1 MAWARI test token** dari MAIN wallet → burner wallet.
+* Kalau cuma punya 1 token, faucet lagi langsung ke burner wallet.
 
 ---
 
-## Step 5 — Backup Keys
+## 4 — Delegasikan Guardian NFT
+
+1. Buka [Guardian Dashboard](https://app.testnet.mawari.net/licenses).
+2. Connect wallet utama.
+3. Pilih NFT → klik **Delegate** → masukkan burner address → konfirmasi.
+
+---
+
+## 5 — Backup Private Key Burner
+
+File tersimpan di `~/mawari/flohive-cache.json`.
+
+Tampilkan private key:
 
 ```bash
-cat ~/mawari/flohive-cache.json | grep privateKey
+grep -i "privateKey" ~/mawari/flohive-cache.json
 ```
 
-⚠️ Save this key securely. Losing it = losing control.
+**Penting:** simpan private key dengan aman (jangan dishare, jangan upload ke repo publik).
 
 ---
 
-## Daily Commands
+## 6 — Perintah Harian
+
+Cek container jalan:
 
 ```bash
-docker ps                      # check containers
-docker logs -f mawari # follow logs
-docker stop/start/restart mawari
+docker ps
 ```
 
-Update node:
+Lihat log:
+
+```bash
+docker logs -f mawari
+```
+
+Stop / start / restart:
+
+```bash
+docker stop mawari
+docker start mawari
+docker restart mawari
+```
+
+---
+
+## 7 — Update Node
+
+Tarik image terbaru:
 
 ```bash
 docker pull $MNTESTNET_IMAGE
-docker rm -f mawari
-# run docker run ... again
 ```
 
----
+Hapus container lama:
 
-## Notes
+```bash
+docker rm -f mawari
+```
 
-* Cache folder (`~/mawari`) stores burner wallet. Don’t delete unless you want a fresh one.
-* Always back up the burner private key.
-* Secure your VPS (SSH keys, firewall, updates).
+Jalankan ulang:
+
+```bash
+docker run -d --name mawari --pull always --restart unless-stopped \
+-v ~/mawari:/app/cache -e OWNERS_ALLOWLIST=$OWNER_ADDRESS $MNTESTNET_IMAGE
+```
 
 ---
 
 ## Troubleshooting
 
-* **Permission denied** → `sudo usermod -aG docker $USER && newgrp docker`
-* **No burner wallet** → check cache folder permissions.
-* **Delegation not detected** → confirm delegation direction (main → burner) and ensure burner has 1 token.
+* **Permission denied saat docker run**
+
+  ```bash
+  sudo usermod -aG docker $USER
+  newgrp docker
+  ```
+
+* **Burner address tidak muncul**
+
+  * Pastikan folder `~/mawari` ada & writable
+  * Restart container lalu cek log lagi
+
+* **Delegasi gagal**
+
+  * Pastikan delegasi dari MAIN → burner
+  * Burner harus pegang 1 token test
 
 ---
-
-🚀 You’re now running a Mawari Guardian Node on testnet!
