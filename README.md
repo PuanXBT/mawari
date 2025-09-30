@@ -13,7 +13,8 @@
 ## 0 — Siapkan Wallet & NFT
 
 1. Claim faucet [Mawari Hub](https://hub.testnet.mawari.net/)
-2. Mint NFT Testnet [Mawari Mint](https://testnet.mawari.net/mint) → connect wallet & mint (max 3)
+2. Mint NFT Testnet [Mawari Mint](https://testnet.mawari.net/mint)
+## Max mint 3 nft
 
 ---
 
